@@ -1,0 +1,11 @@
+:root {
+    --primary-color : #EE7700;
+    --sub-color : #727071;
+    --h1-fontsize : 1.5rem;
+    --h2-fontsize : 1.2rem;
+    --normal-fontsize : 0.8rem;
+    --default-padding : 1rem;
+    --nav-width : 20%;
+    --minimum-height : calc(100vh - 3.5rem);
+    --nav-hover-color : #f4f4f41F;
+}
