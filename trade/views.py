@@ -1,19 +1,21 @@
 from django.shortcuts import render, redirect
+from requests import request
 from .models import *
 from django.core import serializers
 from django.http import HttpResponse
 from main.utils import *
+from . import tb_loading
 import datetime
-from rest_framework import generics
-from .serializers import PostSerializer
+from urllib.parse import urlparse
 
-class ListClient(generics.ListCreateAPIView):
-    queryset = Client.objects.all()
-    serializer_class = PostSerializer
-
-class DetailClient(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Client.objects.all()
-    serializer_class = PostSerializer
+def getTable(request):
+    path = urlparse(request)
+    db = request.split('/')[-3]
+    print('디비는', db)
+    key = request.GET.get("key")
+    data = db.objects.filter(id=key)
+    post_list = serializers.serialize('json', data)
+    return HttpResponse(post_list, content_type="text/json-comment-filtered")
 
 def client(request):
     if request.method == "POST":
@@ -40,13 +42,12 @@ def client(request):
     context = {
         'datas' : datas,
     }
+
     return render(request, "trade/client.html", context)
 
-def getClient(request):
-    key = request.GET.get("key")
-    data = Client.objects.filter(id=key)
-    post_list = serializers.serialize('json', data)
-    return HttpResponse(post_list, content_type="text/json-comment-filtered")
+
+
+
 
 def clientTrade(request):
     if request.method == "POST":
@@ -138,11 +139,8 @@ def editTrade(request):
 
     return redirect("trade:clientTrade")
 
-def getClientTrade(request):
-    key = request.GET.get("key")
-    data = ClientTrade.objects.filter(id=key)
-    post_list = serializers.serialize('json', data)
-    return HttpResponse(post_list, content_type="text/json-comment-filtered")
+
+
 
 def getTrade(request):
     client = request.GET.get("client")
@@ -150,7 +148,7 @@ def getTrade(request):
     end = request.GET.get("end")
 
     data = ClientTrade.objects.filter(client=client, date__range=[start, end], price__gt=0)
-    post_list = serializers.serialize('json', data)
+    post_list = tb_loading.serialize('json', data)
     print(data)
     return HttpResponse(post_list, content_type="text/json-comment-filtered")
 
@@ -179,11 +177,9 @@ def fix(request):
     }
     return render(request, "trade/fixcost.html", context)
 
-def getFix(request):
-    key = request.GET.get("key")
-    data = Fix.objects.filter(id=key)
-    post_list = serializers.serialize('json', data)
-    return HttpResponse(post_list, content_type="text/json-comment-filtered")
+
+
+
 
 def fixCost(request):
     if request.method == "POST":
@@ -214,11 +210,7 @@ def fixCost(request):
     return render(request, "trade/fixTrade.html", context)
 
 
-def getFixCost(request):
-    key = request.GET.get("key")
-    data = FixCost.objects.filter(id=key)
-    post_list = serializers.serialize('json', data)
-    return HttpResponse(post_list, content_type="text/json-comment-filtered")
+
 
 def royalty(request):
     if request.method == "POST":
@@ -254,12 +246,6 @@ def royalty(request):
     }
     return render(request, "trade/royalty.html", context)
 
-def getRoyalty(request):
-    key = request.GET.get("key")
-    data = Royalty.objects.filter(id=key)
-    post_list = serializers.serialize('json', data)
-    print(post_list)
-    return HttpResponse(post_list, content_type="text/json-comment-filtered")
 
 
 def rant(request):
@@ -291,11 +277,7 @@ def rant(request):
     return render(request, "trade/rant.html", context)
 
 
-def getRant(request):
-    key = request.GET.get("key")
-    data = Rant.objects.filter(id=key)
-    post_list = serializers.serialize('json', data)
-    return HttpResponse(post_list, content_type="text/json-comment-filtered")
+
 
 def rantPay(request):
     if request.method == "POST":
@@ -326,11 +308,7 @@ def rantPay(request):
     }
     return render(request, "trade/rantPay.html", context)
 
-def getRantPay(request):
-    key = request.GET.get("key")
-    data = RantPay.objects.filter(id=key)
-    post_list = serializers.serialize('json', data)
-    return HttpResponse(post_list, content_type="text/json-comment-filtered")
+
 
 def etc(request):
     if request.method == "POST":
@@ -358,11 +336,7 @@ def etc(request):
     }
     return render(request, "trade/etc.html", context)
 
-def getEtc(request):
-    key = request.GET.get("key")
-    data = Etc.objects.filter(id=key)
-    post_list = serializers.serialize('json', data)
-    return HttpResponse(post_list, content_type="text/json-comment-filtered")
+
 
 def etcPay(request):
     if request.method == "POST":
@@ -402,11 +376,7 @@ def etcPay(request):
     }
     return render(request, "trade/etcPay.html", context)
 
-def getEtcPay(request):
-    key = request.GET.get("key")
-    data = EtcPay.objects.filter(id=key)
-    post_list = serializers.serialize('json', data)
-    return HttpResponse(post_list, content_type="text/json-comment-filtered")
+
 
 def manage(request):
     if request.method == "POST":
@@ -432,9 +402,3 @@ def manage(request):
         'datas': datas,
     }
     return render(request, "trade/manage.html", context)
-
-def getManage(request):
-    key = request.GET.get("key")
-    data = Manage.objects.filter(id=key)
-    post_list = serializers.serialize('json', data)
-    return HttpResponse(post_list, content_type="text/json-comment-filtered")

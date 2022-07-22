@@ -64,7 +64,7 @@ ROOT_URLCONF = 'qooqoo_django.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'qooqoo_react/public'],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,7 +127,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'qooqoo_react/static',
+    BASE_DIR / 'static',
 ]
 
 # Default primary key field type
